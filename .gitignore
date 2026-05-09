@@ -33,6 +33,7 @@ ENV/
 *.pickle
 df_paris.csv
 qdrant_data*/
+chapter_*/cache.json
 
 # IDE
 .vscode/

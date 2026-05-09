@@ -38,5 +38,10 @@ matplotlib>=3.9
 rich>=13.7
 gradio>=4.31
 
+# --- Chapter 7 extras ---
+pymupdf>=1.24       # PDF text extraction for 10-Ks and OpenAI agents guide
+nest-asyncio>=1.6   # await inside Jupyter
+requests>=2.32      # SerpAPI web search
+
 # --- Local secrets (replaces google.colab.userdata) ---
 python-dotenv>=1.0
