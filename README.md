@@ -16,15 +16,19 @@ This repo is the official companion code for **[Build an Advanced RAG Applicatio
 
 The book teaches you to build search and Retrieval-Augmented Generation (RAG) systems **without leaning on Langchain or LlamaIndex** — so you understand every layer.
 
-## What you'll build
+## 🌟 Features
 
-- **Semantic search** — from hand-rolled cosine in NumPy through FAISS Flat / HNSW / IVF-PQ
-- **Prompted decoders** — basic, structured, few-shot, and Chain-of-Thought prompting patterns
-- **Full RAG** — retrieval + generation, on hotel reviews and research papers
-- **Enterprise RAG** — agentic routing, semantic caching, query rewriting, all wired into one async pipeline
-- **Real corpora** — Paris hotel reviews, DBLP research papers, OpenAI agents guide, Lyft & Uber 10-K filings
+The goal of this book is to teach you advanced RAG by building each layer from scratch:
 
-## Chapters
+- 🔍 **Semantic search engines** — NumPy → FAISS Flat / HNSW / IVF-PQ
+- ✍️ **Decoder prompting patterns** — basic, structured, few-shot, chain-of-thought
+- 📊 **Full RAG pipelines** — FAISS + Qdrant, on hotel reviews and research papers
+- 🧭 **Agentic query routing** — across multiple knowledge bases
+- ⚡ **Semantic caching** — paraphrased queries hit
+- 🔄 **Query rewriting & decomposition** — for vague or compound questions
+- 📚 **Real corpora** — Paris hotel reviews, DBLP research papers, OpenAI agents guide, Uber & Lyft 10-Ks
+
+## 📚 Chapters
 
 | # | Chapter | Code | What you'll learn |
 |---|---------|------|-------------------|
@@ -39,46 +43,29 @@ The book teaches you to build search and Retrieval-Augmented Generation (RAG) sy
 
 The original Colab notebooks (pre-cleanup) are preserved in [colab_original_notebooks/](colab_original_notebooks/) for reference.
 
-## Setup
+## 🔗 Dependencies
 
-### 1. Clone and create the conda env
+### Local dependencies
 
-```bash
-git clone https://github.com/hamzafarooq/advanced-rag-from-scratch.git
-cd advanced-rag-from-scratch
+| Tool | Version | Purpose | Installation Link |
+|------|---------|---------|-------------------|
+| Python | 3.11 | Runtime | [python.org](https://www.python.org/downloads/) |
+| Conda | latest | Environment manager | [Miniconda](https://docs.conda.io/en/latest/miniconda.html) |
+| Jupyter Lab | latest | Notebook UI | installed via `requirements.txt` |
+| Git | 2.0+ | Version control | [git-scm.com](https://git-scm.com/) |
 
-conda create -n advanced-rag python=3.11 -y
-conda activate advanced-rag
-pip install -r requirements.txt
-```
+### Cloud services
 
-### 2. Configure API keys
+| Service | Purpose |
+|---------|---------|
+| [OpenAI](https://platform.openai.com) | LLM calls in Chapters 5 and 7 |
+| [OpenRouter](https://openrouter.ai) | Unified LLM gateway in Chapter 6 |
+| [Kaggle](https://www.kaggle.com) | DBLP research-papers dataset download (Chapter 6b) |
+| [Qdrant Cloud](https://cloud.qdrant.io) | Persistent vector DB for Chapter 7 (optional — falls back to in-memory) |
+| [SerpAPI](https://serpapi.com) | Real Google search for the Chapter 7 web-route (optional) |
+| [HuggingFace Hub](https://huggingface.co) | Hosts the `traversaal-ai-hackathon/hotel_datasets` dataset and the `nomic-embed-text-v1.5` embedding model |
 
-```bash
-cp .env.example .env
-# then edit .env and fill in your real keys
-```
-
-| Key | Required for | Get one at |
-|-----|--------------|------------|
-| `OPENAI_API_KEY` | Chapters 5, 7 | https://platform.openai.com |
-| `OPEN_ROUTER_API_KEY` | Chapter 6 (LLM generation) | https://openrouter.ai |
-| `KAGGLE_USERNAME` + `KAGGLE_KEY` | Chapter 6b (DBLP dataset) | https://www.kaggle.com/settings |
-| `QDRANT_URL` + `QDRANT_API_KEY` | Chapter 7 (optional — falls back to in-memory) | https://cloud.qdrant.io |
-| `SERPAPI_KEY` | Chapter 7 (optional — falls back to a stub) | https://serpapi.com |
-
-Chapter 4 needs no API keys — it runs locally.
-
-### 3. Register the env as a Jupyter kernel
-
-```bash
-python -m ipykernel install --user --name advanced-rag --display-name "Python (advanced-rag)"
-jupyter lab
-```
-
-In any chapter notebook, select the **Python (advanced-rag)** kernel.
-
-## Project structure
+## 🗂️ Project Structure
 
 ```
 advanced-rag-from-scratch/
@@ -107,23 +94,83 @@ advanced-rag-from-scratch/
 │   ├── query_rewriter.py
 │   ├── enterprise_pipeline.py
 │   └── ingest.py
-└── colab_original_notebooks/      # Colab originals, preserved
+└── colab_original_notebooks/        # Colab originals, preserved
 ```
 
-## Tech stack
+## 💻 Installation
 
-| Layer | Choice | Why |
-|-------|--------|-----|
-| Embeddings | `nomic-ai/nomic-embed-text-v1.5` (768d) | Strong open-weight embedder; runs locally |
-| Vector search | FAISS, Qdrant | FAISS for the from-scratch chapters; Qdrant once metadata filtering matters |
-| LLM client | OpenAI SDK against OpenAI and OpenRouter | One client, two endpoints; mix-and-match models |
-| Notebooks | Jupyter Lab | The teaching surface |
-| Modules | Python 3.11 + `python-dotenv` | Reusable across chapters; secrets via `.env` |
+### 1. Clone the Repository
 
-## License
+```bash
+git clone https://github.com/hamzafarooq/advanced-rag-from-scratch.git
+cd advanced-rag-from-scratch
+```
+
+### 2. Set Up Python Environment
+
+```bash
+conda create -n advanced-rag python=3.11 -y
+conda activate advanced-rag
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Register the Jupyter Kernel
+
+```bash
+python -m ipykernel install --user --name advanced-rag --display-name "Python (advanced-rag)"
+```
+
+In any chapter notebook, select the **Python (advanced-rag)** kernel.
+
+### 5. Configure API Keys
+
+```bash
+cp .env.example .env
+# then edit .env and fill in your real keys
+```
+
+| Key | Required for | Get one at |
+|-----|--------------|------------|
+| `OPENAI_API_KEY` | Chapters 5, 7 | https://platform.openai.com |
+| `OPEN_ROUTER_API_KEY` | Chapter 6 (LLM generation) | https://openrouter.ai |
+| `KAGGLE_USERNAME` + `KAGGLE_KEY` | Chapter 6b (DBLP dataset) | https://www.kaggle.com/settings |
+| `QDRANT_URL` + `QDRANT_API_KEY` | Chapter 7 (optional) | https://cloud.qdrant.io |
+| `SERPAPI_KEY` | Chapter 7 (optional) | https://serpapi.com |
+
+Chapter 4 needs no API keys — it runs locally.
+
+## 🏃 Run project
+
+```bash
+conda activate advanced-rag
+jupyter lab
+```
+
+Open any chapter folder, pick a notebook, and choose the **Python (advanced-rag)** kernel. Each chapter is independent; you can read in any order.
+
+Recommended path: **Chapter 4 → 5 → 6a → 6b → 7**.
+
+## 👤 About the author
+
+**Hamza Farooq** is the founder and CEO of [**Traversaal.ai**](https://traversaal.ai), an enterprise AI agents company. He has 15+ years of machine-learning experience across three continents and seven countries — formerly Senior Research Manager at **Google** and **Walmart Labs**, leading data science and ML teams across tech, telecom, finance, and retail.
+
+Hamza is an adjunct professor at **Stanford** (Continuing Studies), **UCLA**, **MIT**, and the **University of Minnesota**, where he designed and taught Machine Learning System Design in UCLA Anderson's #1 globally-ranked MSBA program. He's taught **1,500+ professionals** through Maven and university programs.
+
+He spearheaded the **LLM Adaptation & Research for General Enterprises (LARGE)** initiative and led the development of an **Urdu LLM** — the first state-of-the-art language model for Urdu, addressing linguistic and cultural inequities in AI.
+
+**Find him at:**
+
+- 🌐 [traversaal.ai](https://traversaal.ai)
+- 💼 [LinkedIn](https://www.linkedin.com/in/hamzafarooq/)
+- 💻 [GitHub](https://github.com/hamzafarooq)
+- 🎓 [Maven courses](https://maven.com/boring-bot) — *Building LLM Applications from Scratch*, *Agent Engineering Bootcamp*, *Agentic AI for Product Managers*
+- ✍️ [The Production Gap](https://boringbot.substack.com) on Substack — how to move AI demos to production-grade scale
+
+## 📄 License
 
 See [LICENSE](LICENSE).
-
----
-
-*Hamza Farooq — Founder, [Traversaal.ai](https://traversaal.ai). Adjunct Professor, UCLA & Stanford.*
