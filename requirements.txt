@@ -1,0 +1,42 @@
+# Companion code for "Build an Advanced RAG Application (From Scratch)" — Hamza Farooq, Manning
+# Single environment covering chapters 4, 5, and 6.
+# Setup:
+#   conda create -n advanced-rag python=3.11 -y
+#   conda activate advanced-rag
+#   pip install -r requirements.txt
+
+# --- Core scientific stack ---
+numpy>=1.26
+pandas>=2.2
+scipy>=1.13
+
+# --- Notebook runtime ---
+jupyter>=1.0
+ipykernel>=6.29
+
+# --- Embedding models ---
+sentence-transformers>=3.0
+transformers>=4.41
+torch>=2.2
+einops>=0.8
+
+# --- HuggingFace data ---
+datasets>=2.19
+huggingface-hub>=0.23
+
+# --- Vector search ---
+faiss-cpu>=1.8
+qdrant-client>=1.9
+
+# --- LLM clients ---
+openai>=1.30
+
+# --- Chapter 6b extras ---
+kagglehub>=0.2
+plotly>=5.22
+matplotlib>=3.9
+rich>=13.7
+gradio>=4.31
+
+# --- Local secrets (replaces google.colab.userdata) ---
+python-dotenv>=1.0
