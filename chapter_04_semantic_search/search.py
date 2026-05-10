@@ -65,9 +65,11 @@ def build_faiss_indices(doc_embeddings: np.ndarray):
     hnsw = faiss.IndexHNSWFlat(d, 32)
     hnsw.add(embeddings)
 
-    nlist, m, bits = 100, 8, 8
-    ivfpq = faiss.IndexIVFPQ(faiss.IndexFlatL2(d), d, nlist, m, bits)
+    nlist, m, bits = 16, 8, 8
+    quantizer = faiss.IndexFlatL2(d)
+    ivfpq = faiss.IndexIVFPQ(quantizer, d, nlist, m, bits)
     ivfpq.train(embeddings)
     ivfpq.add(embeddings)
+    ivfpq.nprobe = 8
 
     return {"flat": flat, "hnsw": hnsw, "ivfpq": ivfpq}
