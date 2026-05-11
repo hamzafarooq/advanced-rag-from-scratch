@@ -20,10 +20,11 @@ def simple_recursive_split(
     metadata = doc["metadata"]
     seps = separators or DEFAULT_SEPARATORS
 
-    def split(t: str) -> list[str]:
+    def split(t: str, sep_idx: int = 0) -> list[str]:
         if len(t) <= chunk_size:
             return [t]
-        for sep in seps:
+        for j in range(sep_idx, len(seps)):
+            sep = seps[j]
             if sep and sep in t:
                 parts = t.split(sep)
                 chunks, current = [], ""
@@ -37,13 +38,14 @@ def simple_recursive_split(
                         current = part
                 if current:
                     chunks.append(current)
-                # Recurse if any single chunk is still too big
+                # Recurse with the NEXT separator so we always make progress
                 final = []
                 for c in chunks:
-                    final.extend(split(c) if len(c) > chunk_size else [c])
+                    final.extend(split(c, j + 1) if len(c) > chunk_size else [c])
                 return final
         # No separator helped — hard cut
-        return [t[i : i + chunk_size] for i in range(0, len(t), chunk_size - chunk_overlap)]
+        step = max(1, chunk_size - chunk_overlap)
+        return [t[i : i + chunk_size] for i in range(0, len(t), step)]
 
     pieces = split(text)
 
