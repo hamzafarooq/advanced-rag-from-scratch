@@ -20,6 +20,13 @@ def simple_recursive_split(
     metadata = doc["metadata"]
     seps = separators or DEFAULT_SEPARATORS
 
+    if chunk_overlap >= chunk_size:
+        raise ValueError("chunk_overlap must be smaller than chunk_size")
+
+    def hard_cut(t: str) -> list[str]:
+        step = chunk_size - chunk_overlap if chunk_overlap else chunk_size
+        return [t[i : i + chunk_size] for i in range(0, len(t), step)]
+
     def split(t: str) -> list[str]:
         if len(t) <= chunk_size:
             return [t]
@@ -29,6 +36,12 @@ def simple_recursive_split(
                 chunks, current = [], ""
                 for part in parts:
                     part = part + sep
+                    if len(part) > chunk_size:
+                        if current:
+                            chunks.append(current)
+                            current = ""
+                        chunks.extend(hard_cut(part))
+                        continue
                     if len(current) + len(part) <= chunk_size:
                         current += part
                     else:
@@ -40,10 +53,10 @@ def simple_recursive_split(
                 # Recurse if any single chunk is still too big
                 final = []
                 for c in chunks:
-                    final.extend(split(c) if len(c) > chunk_size else [c])
+                    final.extend(split(c) if len(c) > chunk_size and c != t else [c])
                 return final
         # No separator helped — hard cut
-        return [t[i : i + chunk_size] for i in range(0, len(t), chunk_size - chunk_overlap)]
+        return hard_cut(t)
 
     pieces = split(text)
 

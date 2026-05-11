@@ -1,5 +1,5 @@
 # Companion code for "Build an Advanced RAG Application (From Scratch)" — Hamza Farooq, Manning
-# Single environment covering chapters 4, 5, and 6.
+# Single environment covering chapters 3, 4, 5, 6, and 7.
 # Setup:
 #   conda create -n advanced-rag python=3.11 -y
 #   conda activate advanced-rag
@@ -13,6 +13,9 @@ scipy>=1.13
 # --- Notebook runtime ---
 jupyter>=1.0
 ipykernel>=6.29
+
+# --- NLP utilities ---
+nltk>=3.8
 
 # --- Embedding models ---
 sentence-transformers>=3.0
