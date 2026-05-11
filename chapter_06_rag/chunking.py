@@ -20,28 +20,16 @@ def simple_recursive_split(
     metadata = doc["metadata"]
     seps = separators or DEFAULT_SEPARATORS
 
-    if chunk_overlap >= chunk_size:
-        raise ValueError("chunk_overlap must be smaller than chunk_size")
-
-    def hard_cut(t: str) -> list[str]:
-        step = chunk_size - chunk_overlap if chunk_overlap else chunk_size
-        return [t[i : i + chunk_size] for i in range(0, len(t), step)]
-
-    def split(t: str) -> list[str]:
+    def split(t: str, sep_idx: int = 0) -> list[str]:
         if len(t) <= chunk_size:
             return [t]
-        for sep in seps:
+        for j in range(sep_idx, len(seps)):
+            sep = seps[j]
             if sep and sep in t:
                 parts = t.split(sep)
                 chunks, current = [], ""
                 for part in parts:
                     part = part + sep
-                    if len(part) > chunk_size:
-                        if current:
-                            chunks.append(current)
-                            current = ""
-                        chunks.extend(hard_cut(part))
-                        continue
                     if len(current) + len(part) <= chunk_size:
                         current += part
                     else:
@@ -50,13 +38,14 @@ def simple_recursive_split(
                         current = part
                 if current:
                     chunks.append(current)
-                # Recurse if any single chunk is still too big
+                # Recurse with the NEXT separator so we always make progress
                 final = []
                 for c in chunks:
-                    final.extend(split(c) if len(c) > chunk_size and c != t else [c])
+                    final.extend(split(c, j + 1) if len(c) > chunk_size else [c])
                 return final
         # No separator helped — hard cut
-        return hard_cut(t)
+        step = max(1, chunk_size - chunk_overlap)
+        return [t[i : i + chunk_size] for i in range(0, len(t), step)]
 
     pieces = split(text)
 
