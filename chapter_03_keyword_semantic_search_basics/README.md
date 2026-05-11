@@ -25,7 +25,7 @@ From the **repo root**:
 
 ```bash
 conda activate advanced-rag
-cd chapter_03_basic_keyword_semantic
+cd chapter_03_keyword_semantic_search_basics
 jupyter lab notebook.ipynb
 ```
 

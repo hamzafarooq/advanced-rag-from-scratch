@@ -34,7 +34,7 @@ The goal of this book is to teach you advanced RAG by building each layer from s
 |---|---------|------|-------------------|
 | 1 | The World of Large Language Models | _conceptual_ | What defines an LLM; applications across generation, classification, translation, and retrieval; the anatomy of an LLM application; the scale and challenges of these models; the startup ecosystem around them. |
 | 2 | An in-depth look into the soul of the Transformer Architecture | _conceptual_ | Why Transformers beat RNNs; Self-Attention, Multi-Head Attention, and Positional Encoding; the roles of Encoder and Decoder models, illustrated through real-world Encoder-Decoder use cases. |
-| 3 | Encoder Models in Action: Semantic-Based Retrieval Systems | [chapter_03_basic_keyword_semantic/](chapter_03_basic_keyword_semantic/) | The evolution of information retrieval from keyword to semantic search; chunking for the 512-token BERT limit; building an inverted index with TF-IDF; encoding with `all-MiniLM-L6-v2`; cosine similarity — exact token matching vs. semantic meaning. |
+| 3 | Encoder Models in Action: Semantic-Based Retrieval Systems | [chapter_03_keyword_semantic_search_basics/](chapter_03_keyword_semantic_search_basics/) | The evolution of information retrieval from keyword to semantic search; chunking for the 512-token BERT limit; building an inverted index with TF-IDF; encoding with `all-MiniLM-L6-v2`; cosine similarity — exact token matching vs. semantic meaning. |
 | 4 | Semantic Search from Scratch | [chapter_04_semantic_search/](chapter_04_semantic_search/) | Hand-rolled cosine similarity in NumPy → FAISS exact search → comparing Flat / HNSW / IVF-PQ on the same corpus. |
 | 5 | Decoders in Action | [chapter_05_decoders_in_action/](chapter_05_decoders_in_action/) | How prompt structure shapes output: basic vs. structured vs. few-shot vs. Chain-of-Thought, ending on a CoT prompt that analyzes retrieval results. |
 | 6 | Retrieval-Augmented Generation (RAG) | [chapter_06_rag/](chapter_06_rag/) | A full retrieve → augment → generate loop, twice: hotel reviews (FAISS → Qdrant + city filter) and research papers (chunking + year filter). |
@@ -72,7 +72,7 @@ advanced-rag-from-scratch/
 ├── README.md                        # this file
 ├── requirements.txt                 # all deps in one env
 ├── .env.example                     # API key template
-├── chapter_03_basic_keyword_semantic/ # keyword search + semantic search
+├── chapter_03_keyword_semantic_search_basics/ # keyword search + semantic search
 │   ├── notebook.ipynb               #   walkthrough
 │   └── bond_article.txt             #   context-length demo article
 ├── chapter_04_semantic_search/      # cosine, Euclidean, FAISS Flat/HNSW/IVF-PQ
