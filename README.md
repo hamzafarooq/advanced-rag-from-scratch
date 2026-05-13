@@ -28,6 +28,12 @@ The goal of this book is to teach you advanced RAG by building each layer from s
 - 🔄 **Query rewriting & decomposition** — for vague or compound questions
 - 📚 **Real corpora** — Paris hotel reviews, DBLP research papers, OpenAI agents guide, Uber & Lyft 10-Ks
 
+<div align="center">
+
+<img src="book-overview.png" alt="Book overview" width="800"/>
+
+</div>
+
 ## 📚 Chapters
 
 | # | Chapter | Code | What you'll learn |
