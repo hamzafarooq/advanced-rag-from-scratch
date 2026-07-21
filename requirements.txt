@@ -1,5 +1,5 @@
 # Companion code for "Build an Advanced RAG Application (From Scratch)" — Hamza Farooq, Manning
-# Single environment covering chapters 3, 4, 5, 6, and 7.
+# Single environment covering the whole book (chapter 2's listings through chapter 9).
 # Setup:
 #   conda create -n advanced-rag python=3.11 -y
 #   conda activate advanced-rag

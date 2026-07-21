@@ -33,7 +33,11 @@ ENV/
 *.pickle
 df_paris.csv
 qdrant_data*/
+cache.json
 chapter_*/cache.json
+
+# Browser automation artifacts
+.playwright-mcp/
 
 # IDE
 .vscode/
@@ -49,3 +53,7 @@ Build_an_Advanced_RAG_Application_(From__v4_MEAP.pdf
 
 colab_original_notebooks/chapter_7_data
 colab_original_notebooks/cache.json
+
+# Manuscript drafts and local notes
+Manuscript/
+*.md

@@ -34,6 +34,14 @@ The goal of this book is to teach you advanced RAG by building each layer from s
 
 </div>
 
+## 🏗️ System Architecture
+
+<div align="center">
+
+<img src="overall-architecture.png" alt="End-to-end RAG system architecture" width="900"/>
+
+</div>
+
 ## 📚 Chapters
 
 | # | Chapter | Code | What you'll learn |
