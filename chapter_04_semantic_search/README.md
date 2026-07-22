@@ -4,14 +4,17 @@ Companion code for **Chapter 4** of *Build an Advanced RAG Application (From Scr
 
 ## What this chapter builds
 
-Starting from a corpus of hotel reviews, we walk from a hand-rolled cosine search through to a production-grade FAISS index — covering:
+Starting from a corpus of hotel reviews, we walk from a hand-rolled cosine search through to a production-grade FAISS retriever — covering:
 
-- Loading the `traversaal-ai-hackathon/hotel_datasets` dataset
-- Generating embeddings with `nomic-embed-text-v1.5`
+- Loading the `traversaal-ai-hackathon/hotel_datasets` dataset (Paris)
+- Generating embeddings with `nomic-embed-text-v1.5`, using the `search_query:` / `search_document:` task prefixes
 - Cosine similarity in pure NumPy
 - Normalized-Euclidean distance (and why it ranks identically)
 - FAISS `IndexFlatIP` for exact cosine search at scale
 - Comparing **Flat** vs. **HNSW** vs. **IVF-PQ** index types
+- Reranking the first-stage results with a **cross-encoder** (`ms-marco-MiniLM-L-6-v2`)
+- Aggregating matched reviews into ranked **hotels** by mean similarity
+- Packaging it all as one `retrieve()` function, and persisting the index and embeddings so the offline work runs once
 
 ## Files
 
