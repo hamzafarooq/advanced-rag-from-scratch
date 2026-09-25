@@ -18,8 +18,11 @@ ipykernel>=6.29
 nltk>=3.8
 
 # --- Embedding models ---
-sentence-transformers>=3.0
-transformers>=4.41
+# transformers is pinned below 5: nomic-embed-text-v1.5 ships custom model code that
+# calls get_extended_attention_mask, which Transformers 5 removed (AttributeError on
+# model.encode). Verified working on transformers 4.57 + sentence-transformers 5.5.
+sentence-transformers>=3.0,<6
+transformers>=4.41,<5
 torch>=2.2
 einops>=0.8
 

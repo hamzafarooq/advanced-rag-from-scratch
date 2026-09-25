@@ -4,20 +4,22 @@ Companion code for **Chapter 3** of *Build an Advanced RAG Application (From Scr
 
 ## What this chapter builds
 
-Starting from a handful of sample sentences, we walk through the two foundational
-text-retrieval approaches — and the context-length problem that motivates both:
+Starting from a small corpus of reviews for the (fictional) Travelle hotel, we walk
+through the two foundational text-retrieval approaches — and the context-length
+problem that motivates chunking:
 
-- Why transformer models need chunking (the 512-token BERT limit)
 - Building an inverted index and ranking with TF-IDF
-- Encoding documents with `all-MiniLM-L6-v2` sentence embeddings
-- Cosine similarity search — exact token matching vs. semantic meaning
+- Why exact token matching breaks, and why stemming/lemmatization can't fully fix it
+- Chunking: context limits and retrieval precision
+- Encoding the corpus with `nomic-embed-text-v1.5` sentence embeddings
+- Cosine similarity search — keyword vs. semantic, side by side
 
 ## Files
 
 | File | Purpose |
 |------|---------|
 | [notebook.ipynb](notebook.ipynb) | Walkthrough — read top-to-bottom |
-| [bond_article.txt](bond_article.txt) | Sample long article for the context-length demo |
+| [hotel_page.txt](hotel_page.txt) | Long hotel page used for the chunking demo |
 
 ## Run it
 

@@ -26,6 +26,8 @@ The goal of this book is to teach you advanced RAG by building each layer from s
 - 🧭 **Agentic query routing** — across multiple knowledge bases
 - ⚡ **Semantic caching** — paraphrased queries hit
 - 🔄 **Query rewriting & decomposition** — for vague or compound questions
+- 🧠 **Conversation memory** — short-term windows + long-term cross-session facts
+- 🛡️ **Guardrails & access control** — injection/PII checks on local Ollama, role-based routing, provenance
 - 📚 **Real corpora** — Paris hotel reviews, DBLP research papers, OpenAI agents guide, Uber & Lyft 10-Ks
 
 <div align="center">
@@ -48,12 +50,14 @@ The goal of this book is to teach you advanced RAG by building each layer from s
 |---|---------|------|-------------------|
 | 1 | The World of Large Language Models | _conceptual_ | What defines an LLM; applications across generation, classification, translation, and retrieval; the anatomy of an LLM application; the scale and challenges of these models; the startup ecosystem around them. |
 | 2 | An in-depth look into the soul of the Transformer Architecture | _conceptual_ | Why Transformers beat RNNs; Self-Attention, Multi-Head Attention, and Positional Encoding; the roles of Encoder and Decoder models, illustrated through real-world Encoder-Decoder use cases. |
-| 3 | Encoder Models in Action: Semantic-Based Retrieval Systems | [chapter_03_keyword_semantic_search_basics/](chapter_03_keyword_semantic_search_basics/) | The evolution of information retrieval from keyword to semantic search; chunking for the 512-token BERT limit; building an inverted index with TF-IDF; encoding with `all-MiniLM-L6-v2`; cosine similarity — exact token matching vs. semantic meaning. |
-| 4 | Semantic Search from Scratch | [chapter_04_semantic_search/](chapter_04_semantic_search/) | Hand-rolled cosine similarity in NumPy → FAISS exact search → comparing Flat / HNSW / IVF-PQ on the same corpus. |
-| 5 | Decoders in Action | [chapter_05_decoders_in_action/](chapter_05_decoders_in_action/) | How prompt structure shapes output: basic vs. structured vs. few-shot vs. Chain-of-Thought, ending on a CoT prompt that analyzes retrieval results. |
+| 3 | Encoder Models in Action: Semantic-Based Retrieval Systems | [chapter_03_keyword_semantic_search_basics/](chapter_03_keyword_semantic_search_basics/) | Keyword vs. semantic retrieval on a hotel-review corpus: inverted index with TF-IDF; why exact token matching breaks (and why stemming/lemmatization can't fully fix it); chunking for context limits; encoding with `nomic-embed-text-v1.5`; cosine similarity search. |
+| 4 | Semantic Search from Scratch | [chapter_04_semantic_search/](chapter_04_semantic_search/) | Hand-rolled cosine similarity in NumPy → FAISS exact search → comparing Flat / HNSW / IVF-PQ → cross-encoder reranking → one reusable `retrieve()` over Paris hotel reviews. |
+| 5 | Decoders in Action | [chapter_05_decoders_in_action/](chapter_05_decoders_in_action/) | The autoregressive loop on GPT-2; decoding algorithms (greedy, beam, temperature / top-k / top-p) with their failure modes; prompting patterns (basic / structured / few-shot / CoT); grounded, cited generation over retrieved reviews. |
 | 6 | Retrieval-Augmented Generation (RAG) | [chapter_06_rag/](chapter_06_rag/) | A full retrieve → augment → generate loop, twice: hotel reviews (FAISS → Qdrant + city filter) and research papers (chunking + year filter). |
 | 7 | Enterprise RAG: Agentic Routing, Semantic Caching, and Query Rewriting | [chapter_07_enterprise_rag/](chapter_07_enterprise_rag/) | LLM-based router across multiple knowledge bases, FAISS-backed semantic cache, query rewriter and decomposer, all combined into one async pipeline. Real data: OpenAI agents guide + Uber/Lyft 10-Ks. |
-| 8 | Deploying RAG into Production | _coming in a future MEAP_ | Operational concerns of shipping RAG: deployment, observability, guardrails, and full agentic orchestration on top of the routing/caching/rewriting foundation. |
+| 8 | Memory and Local Models | [chapter_08_memory_and_local_models/](chapter_08_memory_and_local_models/) | Short-term conversation memory (sliding window + semantic retrieval), long-term cross-session facts with an LLM fact extractor, and a local Ollama stack for steps that must not call a third-party API. |
+| 9 | Guardrails, Access Control, and Production Readiness | [chapter_09_guardrails_and_production/](chapter_09_guardrails_and_production/) | Input guardrails (injection / PII / jailbreaks, run on local Ollama), output validation, role-based collection access, provenance tracking, all wired into one production pipeline. |
+| — | End-to-End System | [end_to_end/](end_to_end/) | Every layer from chapters 3–9 behind a single `RAGSystem` class with a three-method API: `ingest`, `chat`, `explain`. |
 
 The original Colab notebooks (pre-cleanup) are preserved in [colab_original_notebooks/](colab_original_notebooks/) for reference.
 
@@ -78,6 +82,7 @@ The original Colab notebooks (pre-cleanup) are preserved in [colab_original_note
 | [Qdrant Cloud](https://cloud.qdrant.io) | Persistent vector DB for Chapter 7 (optional — falls back to in-memory) |
 | [SerpAPI](https://serpapi.com) | Real Google search for the Chapter 7 web-route (optional) |
 | [HuggingFace Hub](https://huggingface.co) | Hosts the `traversaal-ai-hackathon/hotel_datasets` dataset and the `nomic-embed-text-v1.5` embedding model |
+| [Ollama](https://ollama.com) | Local (not cloud) LLM runtime for Chapters 8–9 — memory fact extraction and guardrails run fully on your machine |
 
 ## 🗂️ Project Structure
 
@@ -88,14 +93,15 @@ advanced-rag-from-scratch/
 ├── .env.example                     # API key template
 ├── chapter_03_keyword_semantic_search_basics/ # keyword search + semantic search
 │   ├── notebook.ipynb               #   walkthrough
-│   └── bond_article.txt             #   context-length demo article
+│   └── hotel_page.txt               #   long page for the chunking demo
 ├── chapter_04_semantic_search/      # cosine, Euclidean, FAISS Flat/HNSW/IVF-PQ
 │   ├── notebook.ipynb               #   walkthrough
 │   ├── data_loader.py               #   hotel review loader
 │   └── search.py                    #   reusable search helpers
-├── chapter_05_decoders_in_action/   # prompting styles
+├── chapter_05_decoders_in_action/   # decoding algorithms + prompting styles
 │   ├── notebook.ipynb
-│   ├── llm_client.py
+│   ├── decoding.py                  #   GPT-2 decoding demos (local, no key)
+│   ├── llm_client.py                #   env-driven OpenAI-compatible client
 │   └── prompts.py
 ├── chapter_06_rag/                  # full RAG, hotels + papers
 │   ├── 06a_rag_pipeline.ipynb       #   FAISS → Qdrant + city filter
@@ -111,6 +117,19 @@ advanced-rag-from-scratch/
 │   ├── query_rewriter.py
 │   ├── enterprise_pipeline.py
 │   └── ingest.py
+├── chapter_08_memory_and_local_models/ # conversation memory + Ollama
+│   ├── notebook.ipynb
+│   ├── conversation_memory.py       #   short/long-term memory + fact extractor
+│   ├── local_llm.py                 #   OpenAI-compatible wrapper for Ollama
+│   └── pipeline_ch8.py              #   ch7 pipeline + memory layers
+├── chapter_09_guardrails_and_production/ # guardrails + access control
+│   ├── notebook.ipynb
+│   ├── guardrails.py                #   input/output guardrails (local Ollama)
+│   ├── access_control.py            #   role-based access + provenance
+│   └── pipeline_ch9.py              #   production pipeline on top of ch8
+├── end_to_end/                      # everything wired into one RAGSystem
+│   ├── notebook.ipynb
+│   └── rag_system.py                #   ingest / chat / explain
 └── colab_original_notebooks/        # Colab originals, preserved
 ```
 
@@ -159,7 +178,9 @@ cp .env.example .env
 | `QDRANT_URL` + `QDRANT_API_KEY` | Chapter 7 (optional) | https://cloud.qdrant.io |
 | `SERPAPI_KEY` | Chapter 7 (optional) | https://serpapi.com |
 
-Chapter 4 needs no API keys — it runs locally.
+Optional `LLM_BASE_URL` / `LLM_MODEL` / `LLM_API_KEY` overrides let the Chapter 5 client point at any OpenAI-compatible endpoint (OpenRouter, local Ollama) without code changes — see [.env.example](.env.example).
+
+Chapters 3 and 4 need no API keys — they run locally. Chapters 8–9 use a local [Ollama](https://ollama.com) server instead of a cloud key.
 
 ## 🏃 Run project
 
@@ -170,7 +191,7 @@ jupyter lab
 
 Open any chapter folder, pick a notebook, and choose the **Python (advanced-rag)** kernel. Each chapter is independent; you can read in any order.
 
-Recommended path: **Chapter 4 → 5 → 6a → 6b → 7**.
+Recommended path: **Chapter 3 → 4 → 5 → 6a → 6b → 7 → 8 → 9 → end_to_end**.
 
 ## 👤 About the author
 
