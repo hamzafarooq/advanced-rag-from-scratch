@@ -79,3 +79,14 @@ def nucleus_size(prompt: str, p: float = 0.9) -> int:
     sorted_p, _ = torch.sort(probs, descending=True)
     csum = torch.cumsum(sorted_p, dim=0)
     return int((csum < p).sum().item()) + 1
+
+
+def continuation_logprob(prompt: str, text: str) -> float:
+    """Total log probability GPT-2 assigns to the part of `text` after `prompt`."""
+    tok, lm = load_gpt2()
+    n = len(tok(prompt).input_ids)
+    ids = tok(text, return_tensors="pt").input_ids
+    with torch.no_grad():
+        logp = torch.log_softmax(lm(ids).logits[0, :-1], dim=-1)
+    picked = logp[torch.arange(ids.shape[1] - 1), ids[0, 1:]]
+    return picked[n - 1:].sum().item()
